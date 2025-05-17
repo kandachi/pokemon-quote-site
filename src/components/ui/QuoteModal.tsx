@@ -3,14 +3,13 @@
 import { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
 import type { Quote } from '@/types';
+import Image from 'next/image';
 
 type QuoteModalProps = {
   quote: Quote;
   onClose: () => void;
   cloudfrontDomain: string | undefined;
 };
-
-const CLOUDFRONT_DOMAIN_NAME = process.env.NEXT_PUBLIC_CLOUDFRONT_DOMAIN;
 
 // モーダルコンポーネント
 export default function QuoteModal({ quote, onClose, cloudfrontDomain }: QuoteModalProps) {
@@ -54,10 +53,13 @@ export default function QuoteModal({ quote, onClose, cloudfrontDomain }: QuoteMo
 
           {imageUrl ? (
             <div className="my-4 flex justify-center">
-              <img
+              <Image
                 src={imageUrl}
                 alt={`画像: ${quote.name} - ${quote.tweet_content.substring(0, 20)}...`}
-                className="max-w-full h-auto max-h-[50vh] rounded-lg shadow-md object-contain"
+                width={500} // 例: 画像の最大幅
+                height={300} // 例: 画像の最大高さ
+                objectFit="contain" // アスペクト比を保ちつつコンテナに収める
+                className="max-w-full h-auto max-h-[50vh] rounded-lg shadow-md" // classNameは引き続き有効
                 onError={(e) => {
                   (e.target as HTMLImageElement).style.display = 'none';
                   console.error("Failed to load image:", imageUrl);

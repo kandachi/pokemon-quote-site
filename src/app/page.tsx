@@ -1,11 +1,11 @@
 "use client"; // クライアントコンポーネントとしてマーク
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import QuoteModal from '@/components/ui/QuoteModal';
 import GameFilterButtons from '@/components/ui/GameFilterButtons';
 import SearchBar from '@/components/ui/SearchBar';
 import type { Quote } from '@/types';
-import { GAME_TITLE_DATA, type GameInfo } from '@/constants'; 
+import { GAME_TITLE_DATA } from '@/constants'; 
 
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 const CLOUDFRONT_DOMAIN_NAME = process.env.NEXT_PUBLIC_CLOUDFRONT_DOMAIN;
