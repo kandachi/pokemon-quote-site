@@ -6,6 +6,7 @@ import GameFilterButtons from '@/components/ui/GameFilterButtons';
 import SearchBar from '@/components/ui/SearchBar';
 import type { Quote } from '@/types';
 import { GAME_TITLE_DATA } from '@/constants'; 
+import Footer from '@/components/layout/Footer';
 
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 const CLOUDFRONT_DOMAIN_NAME = process.env.NEXT_PUBLIC_CLOUDFRONT_DOMAIN;
@@ -59,8 +60,6 @@ export default function HomePage() {
         setIsLoading(false);
       });
   }, []);
-
-
 
   const filteredQuotes = quotes.filter(q => {
     const matchesSearchQuery =
@@ -186,11 +185,7 @@ export default function HomePage() {
       </main>
 
       {/* フッター */}
-      <footer className="footer footer-center p-4 bg-base-300 text-base-content">
-        <div>
-          <p>Copyright © {new Date().getFullYear()} - ポケモンの名言集. All right reserved.</p>
-        </div>
-      </footer>
+      <Footer/>
 
       {/* ★★★ インポートした QuoteModal を使用 ★★★ */}
       {selectedQuote && (

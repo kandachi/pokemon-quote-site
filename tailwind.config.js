@@ -15,8 +15,8 @@ module.exports = {
   plugins: [require("daisyui")],
   daisyui: {
     themes: [
-      "light",
-      "dark",
+      "corporate",
+      "night",
       {
         "pokemon-red-green": {
           "primary": "#c62828",       // 明るめの赤 (Redのイメージ)#c62828#FF3B30
