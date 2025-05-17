@@ -19,14 +19,14 @@ module.exports = {
       "dark",
       {
         "pokemon-red-green": {
-          "primary": "#FF3B30",       // 明るめの赤 (Redのイメージ)
-          "secondary": "#4CD964",     // 明るめの緑 (Greenのイメージ)
+          "primary": "#c62828",       // 明るめの赤 (Redのイメージ)#c62828#FF3B30
+          "secondary": "#2e7d32",     // 明るめの緑 (Greenのイメージ)#2e7d32#4CD964
           "accent": "#FFCC00",        // 黄色 (ピカチュウ、電気)
           "neutral": "#FF3B30",       // グレー (UI要素の区切りなど)
           "base-100": "#C0BC8F",       // 明るいオフホワイト (清潔感)
           "base-200": "#C0BC8F",
           "base-300": "#D1D1D6",
-          "base-content": "#000000",   // 濃いチャコールグレー (文字)
+          "base-content": "#212121",   // 濃いチャコールグレー (文字)
           "info": "#007AFF",
           "success": "#34C759",
           "warning": "#FF9500",
@@ -53,10 +53,10 @@ module.exports = {
           "secondary": "#2F80E6",     // サファイアブルー
           "accent": "#32CD32",        // エメラルドグリーン (アクセント)
           "neutral": "#6D6D72",
-          "base-100": "#4498BE",       // 淡い水色/白 (海のイメージ)
-          "base-200": "#C73132",
+          "base-100": "#fff3e0",       // 淡い水色/白 (海のイメージ) #f4f9ff #4498BE
+          "base-200": "#f4f9ff",
           "base-300": "#C2D0D9",
-          "base-content": "#1A2B3C",   // 濃いネイビー
+          "base-content": "#1a1a1a",   // 濃いネイビー
           "info": "#00A2FF",
           "success": "#28A745",
           "warning": "#FFEB3B",
@@ -116,12 +116,12 @@ module.exports = {
 
         "pokemon-xy": {
           "primary": "#0075BE",       // ゼルネアスの青
-          "secondary": "#E4002B",     // イベルタルの赤
+          "secondary": "#d32f2f",     // イベルタルの赤
           "accent": "#FFCB05",        // 黄色 (共通のアクセント)
           "neutral": "#555555",
-          "base-100": "#0075BE",       // 明るく洗練された背景
-          "base-200": "#E4002B",
-          "base-content": "#222222",
+          "base-100": "#e8eaf6",       // 明るく洗練された背景#f5f5f5
+          "base-200": "#f5f5f5",
+          "base-content": "#212121",
           // ... info, success etc.
         },
 
@@ -130,9 +130,9 @@ module.exports = {
           "secondary": "#3F51B5",     // 月の紺
           "accent": "#00BCD4",        // 水色 (海、アローラの自然)
           "neutral": "#616161",
-          "base-100": "#FF9800",       // 暖色系の明るい背景
-          "base-200": "#3F51B5",
-          "base-content": "#3E2723",   // 濃い茶色
+          "base-100": "#fff3e0",       // 暖色系の明るい背景
+          "base-200": "#fffde7",
+          "base-content": "#212121",   // 濃い茶色
           // ... info, success etc.
         },
 
@@ -141,9 +141,9 @@ module.exports = {
           "secondary": "#5C6BC0", // SMの月より少し明るい紺
           "accent": "#AB47BC", // 紫 (ウルトラスペース)
           "neutral": "#263238", // ネクロズマの黒っぽい色
-          "base-100": "#5C6BC0", // クールな明るいグレー
-          "base-200": "#FFA726",
-          "base-content": "#102A43",
+          "base-100": "#fff3e0", // クールな明るいグレー
+          "base-200": "#fef9f4",
+          "base-content": "#1a1a1a",
           // ... info, success etc.
         },
 
@@ -152,9 +152,9 @@ module.exports = {
           "secondary": "#D80032",     // ザマゼンタのマゼンタ
           "accent": "#F1C40F",        // ゴールド (王冠など)
           "neutral": "#4A5568",       // ストーングレー
-          "base-100": "#D80032",       // 清潔感のあるオフホワイト
-          "base-200": "#00A1E4",
-          "base-content": "#2D3748",
+          "base-100": "#e3f2fd",       // 清潔感のあるオフホワイト
+          "base-200": "#fdfcf9",
+          "base-content": "#1c1c1c",
           // ... info, success etc.
         },
 
@@ -163,9 +163,9 @@ module.exports = {
           "secondary": "#7B1FA2", // バイオレット (深い紫色)
           "accent": "#FFCA28", // オレンジがかった黄色 (太陽、果物)
           "neutral": "#6D4C41", // アースカラー (茶色)
-          "base-100": "#7B1FA2", // 明るいクリームイエロー (スペインの陽光)
-          "base-200": "#E64A19",
-          "base-content": "#4E342E", // 濃い焦げ茶
+          "base-100": "#ede7f6", // 明るいクリームイエロー (スペインの陽光)
+          "base-200": "#fff8f0",
+          "base-content": "#1a1a1a", // 濃い焦げ茶
           // ... info, success etc.
         },
       },
