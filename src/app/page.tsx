@@ -5,7 +5,7 @@ import QuoteModal from '@/components/ui/QuoteModal';
 import GameFilterButtons from '@/components/ui/GameFilterButtons';
 import SearchBar from '@/components/ui/SearchBar';
 import type { Quote } from '@/types';
-import { ALL_GAME_SERIES_DATA, GAME_ID_TO_SERIES_ID_MAP, type GameSeriesInfo } from '@/constants';
+import { ALL_GAME_SERIES_DATA, GAME_ID_TO_SERIES_ID_MAP } from '@/constants';
 import Footer from '@/components/layout/Footer';
 
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;

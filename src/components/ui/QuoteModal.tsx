@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
 import type { Quote } from '@/types';
 import Image from 'next/image';
-import { ALL_GAME_SERIES_DATA, GAME_ID_TO_SERIES_ID_MAP, type GameSeriesInfo, type GameVersionInfo } from '@/constants';
+import { ALL_GAME_SERIES_DATA, GAME_ID_TO_SERIES_ID_MAP, type GameVersionInfo } from '@/constants';
 
 type QuoteModalProps = {
   quote: Quote;
@@ -138,7 +138,10 @@ export default function QuoteModal({ quote, onClose, cloudfrontDomain }: QuoteMo
                   src={imageUrl}
                   alt={`画像: ${quote.name}`}
                   className="max-w-full h-auto max-h-[40vh] md:max-h-[50vh] rounded-lg shadow-md object-contain"
-                  onError={(e) => { /* ... */ }}
+                  onError={(e) => { // ★ この 'e' が使われていない
+                    (e.target as HTMLImageElement).style.display = 'none'; // next/image ではこの方法は使えないことが多い
+                    console.error("Failed to load image:");
+                  }}
                 />
               </div>
             )}
