@@ -5,7 +5,7 @@ import QuoteModal from '@/components/ui/QuoteModal';
 import GameFilterButtons from '@/components/ui/GameFilterButtons';
 import SearchBar from '@/components/ui/SearchBar';
 import type { Quote } from '@/types';
-import { GAME_TITLE_DATA } from '@/constants'; 
+import { ALL_GAME_SERIES_DATA, GAME_ID_TO_SERIES_ID_MAP, type GameSeriesInfo } from '@/constants';
 import Footer from '@/components/layout/Footer';
 
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
@@ -14,11 +14,11 @@ const CLOUDFRONT_DOMAIN_NAME = process.env.NEXT_PUBLIC_CLOUDFRONT_DOMAIN;
 export default function HomePage() {
   const [quotes, setQuotes] = useState<Quote[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedGameFilter, setSelectedGameFilter] = useState<string | null>(null); // ゲームのIDでフィルター
+  const [selectedGameSeriesId, setSelectedGameSeriesId] = useState<string | null>(null); // フィルター対象のシリーズID
   const [selectedQuote, setSelectedQuote] = useState<Quote | null>(null);
   const [isLoading, setIsLoading] = useState(true); // ローディング状態
   const [error, setError] = useState<string | null>(null); // エラーメッセージ
-  const [currentTheme, setCurrentTheme] = useState<string>("light"); // デフォルトテーマ
+  const [currentTheme, setCurrentTheme] = useState<string>("light");
 
   useEffect(() => {
     setIsLoading(true);
@@ -67,14 +67,12 @@ export default function HomePage() {
       q.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       q.game.toLowerCase().includes(searchQuery.toLowerCase());
 
-    // ★★★ フィルタリングロジックを game.id と比較するように変更 ★★★
-    // Quote 型に gameId のようなプロパティがあるか、
-    // game プロパティ (文字列) と GAME_TITLE_DATA を照合する必要がある
-    // ここでは、簡単のため quotes の game プロパティが GAME_TITLE_DATA の displayName と一致すると仮定
-    // より堅牢にするには、Quote型に gameId のような識別子を持たせ、GAME_TITLE_DATAのidと照合する
-    const gameInfoForQuote = GAME_TITLE_DATA.find(g => g.displayName === q.game);
-    const matchesGameFilter = selectedGameFilter
-      ? gameInfoForQuote?.id === selectedGameFilter
+    // ★★★ フィルタリングロジックの変更 ★★★
+    const quoteGameIds = q.game.split('/').map(id => id.trim()); // "Pt/HGSS" -> ["Pt", "HGSS"]
+    const quoteSeriesIds = quoteGameIds.map(id => GAME_ID_TO_SERIES_ID_MAP[id] || id); // "Pt" -> "dppt", "HGSS" -> "hgss"
+
+    const matchesGameFilter = selectedGameSeriesId
+      ? quoteSeriesIds.includes(selectedGameSeriesId) // 名言のシリーズIDのいずれかが選択されたシリーズIDと一致するか
       : true;
 
     return matchesSearchQuery && matchesGameFilter;
@@ -89,18 +87,18 @@ export default function HomePage() {
   };
 
   // ゲームタイトルフィルターボタンがクリックされたときの処理
-  const handleGameFilterClick = (gameId: string | null) => {
-    setSelectedGameFilter(gameId);
+  const handleGameFilterClick = (seriesId: string | null) => {
+    setSelectedGameSeriesId(seriesId);
 
-    if (gameId) {
-      const selectedGame = GAME_TITLE_DATA.find(g => g.id === gameId);
-      if (selectedGame && selectedGame.themeName) {
-        setCurrentTheme(selectedGame.themeName);
+    if (seriesId) {
+      const selectedSeries = ALL_GAME_SERIES_DATA.find(s => s.seriesId === seriesId);
+      if (selectedSeries && selectedSeries.themeName) {
+        setCurrentTheme(selectedSeries.themeName);
       } else {
-        setCurrentTheme("light"); // 対象ゲームにテーマがなければデフォルトに戻す
+        setCurrentTheme("light");
       }
     } else {
-      setCurrentTheme("light"); // 「すべて表示」の場合はデフォルトテーマ
+      setCurrentTheme("light");
     }
   };
 
@@ -135,8 +133,8 @@ export default function HomePage() {
 
         {/* ★★★ ステップ4: ゲームタイトルボタンのJSXを実装 ★★★ */}
         <GameFilterButtons
-          gameData={GAME_TITLE_DATA} // 拡張したデータを渡す
-          selectedGameFilter={selectedGameFilter}
+          allGameSeries={ALL_GAME_SERIES_DATA} // 渡すデータを変更
+          selectedGameSeriesId={selectedGameSeriesId} // 渡すstateを変更
           onFilterClick={handleGameFilterClick}
         />
 
@@ -165,7 +163,9 @@ export default function HomePage() {
                 onClick={() => openModal(q)}
               >
                 <div className="card-body">
-                  <p className="text-lg font-semibold mb-2 leading-tight line-clamp-3 whitespace-pre-line">{q.tweet_content}</p> {/* 長文対策 */}
+                  <p className="text-lg font-bold mb-2 leading-tight line-clamp-3 whitespace-pre-line">
+                    {q.tweet_content}
+                  </p> {/* 長文対策 */}
                   <p className="text-sm text-neutral-focus mt-1">
                     {q.name}（{q.game}）
                   </p>
@@ -192,7 +192,7 @@ export default function HomePage() {
         <QuoteModal
           quote={selectedQuote}
           onClose={closeModal}
-          cloudfrontDomain={CLOUDFRONT_DOMAIN_NAME} // propsとして渡す
+          cloudfrontDomain={CLOUDFRONT_DOMAIN_NAME}
         />
       )}
     </div>

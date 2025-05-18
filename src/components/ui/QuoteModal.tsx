@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
 import type { Quote } from '@/types';
 import Image from 'next/image';
+import { ALL_GAME_SERIES_DATA, GAME_ID_TO_SERIES_ID_MAP, type GameSeriesInfo, type GameVersionInfo } from '@/constants';
 
 type QuoteModalProps = {
   quote: Quote;
@@ -30,49 +31,133 @@ export default function QuoteModal({ quote, onClose, cloudfrontDomain }: QuoteMo
     ? `${cloudfrontDomain}/${quote.image_key}`
     : null;
 
+  // ★★★ 表示するゲームロゴの情報を取得 ★★★
+  const getRelevantGameVersions = (gameString: string): GameVersionInfo[] => {
+    const gameIdStringsFromQuote = gameString.split('/').map(s => s.trim()); // "Pt/HGSS" -> ["Pt", "HGSS"]
+    const relevantVersionsSet = new Set<GameVersionInfo>(); // 重複を避けるためにSetを使用
+
+    gameIdStringsFromQuote.forEach(singleGameIdOrSeriesName => {
+      // まず、GAME_ID_TO_SERIES_ID_MAP でシリーズIDを探す
+      const mappedSeriesId = GAME_ID_TO_SERIES_ID_MAP[singleGameIdOrSeriesName];
+
+      if (mappedSeriesId) {
+        // マップで見つかった場合 (例: "Pt" -> "dppt", "Em" -> "rse")
+        const seriesInfo = ALL_GAME_SERIES_DATA.find(s => s.seriesId === mappedSeriesId);
+        if (seriesInfo) {
+          // singleGameIdOrSeriesName が具体的なバージョンID (例: "Pt", "Em") か、
+          // それともマップのキー自体がシリーズ名 (例: "RSE" や "DPt" が game カラムに入っていた場合) かを判断
+          // ここでは、マップのキーが具体的なバージョンIDを示すことを期待する
+          // (例: GAME_ID_TO_SERIES_ID_MAP のキーが "platinum", "emerald" などになっているとより良い)
+
+          // より確実なのは、singleGameIdOrSeriesName がシリーズ内の特定のバージョンIDと一致するかどうか
+          const specificVersion = seriesInfo.versions.find(v => v.id.toLowerCase() === singleGameIdOrSeriesName.toLowerCase() || v.displayName === singleGameIdOrSeriesName);
+
+          if (specificVersion) {
+            // 特定のバージョンが見つかればそれだけを追加
+            relevantVersionsSet.add(specificVersion);
+          } else {
+            // マップで見つかったが、具体的なバージョンIDではなかった場合 (例: "RSE" が game カラムに入っていた)
+            // そのシリーズの全バージョンを追加 (現在の動作に近い)
+            seriesInfo.versions.forEach(v => relevantVersionsSet.add(v));
+          }
+        }
+      } else {
+        // マップで見つからなかった場合、singleGameIdOrSeriesName が直接シリーズIDまたはシリーズ名かもしれない
+        const seriesInfo = ALL_GAME_SERIES_DATA.find(
+          s => s.seriesId === singleGameIdOrSeriesName || s.seriesName === singleGameIdOrSeriesName
+        );
+        if (seriesInfo) {
+          // シリーズが見つかれば、そのシリーズの全バージョンを追加
+          seriesInfo.versions.forEach(v => relevantVersionsSet.add(v));
+        } else {
+          console.warn(`該当するゲーム情報が見つかりませんでした: ${singleGameIdOrSeriesName}`);
+        }
+      }
+    });
+
+    return Array.from(relevantVersionsSet); // Setから配列に変換して返す
+  };
+
+  const relevantGameLogos = getRelevantGameVersions(quote.game);
+
+  if (!isBrowser || !modalRootRef.current || !quote) {
+    return null;
+  }
+
+
   return ReactDOM.createPortal(
     <div className="modal modal-open">
-      <div className="modal-box relative w-11/12 max-w-2xl">
+       {/* ★★★ modal-box に flex flex-col を追加 ★★★ */}
+      <div className="modal-box p-0 relative w-11/12 max-w-4xl flex flex-col max-h-[90vh]"> {/* 高さを少し調整 */}
+        {/* --- モーダルヘッダー --- */}
+        <div className="modal-header px-4 border-b-4 border-[#FBD74F] bg-[#FFFFFF]"> {/* p-4 や border-b で区切り */}
+          {/* 閉じるボタンをヘッダー右端に配置することも可能 */}
+          <p className="text-xl mt-4">ポケモン名言図鑑</p>
+        </div>
 
-        {/* ... (閉じるボタン、名言、キャラクター情報など) ... */}
-        <button
-          className="btn btn-sm btn-circle absolute right-2 top-2 z-10"
-          onClick={onClose}
-        >
-          ✕
-        </button>
+        {/* ★★★ サブヘッダー (2段目 - 濃い紺ゾーン) ★★★ */}
+        <div className="sub-header py-2 px-6 bg-[#1C2A4D] flex justify-center"> {/* 例: 濃い紺背景、白文字 */}
+          {/* ここに表示したい情報 (例: ゲームタイトル、キャラクターの分類など) を配置 */}
+          <p className="text-sm text-[#F9C706] font-semibold underline decoration-3 underline-offset-4"> JPN </p>
+        </div>
 
-        <div className="overflow-y-auto px-4 py-6 max-h-[80vh]"> {/* 少し高さを許容 */}
-          <p className="text-xl lg:text-2xl font-bold mb-4 leading-relaxed text-base-content whitespace-pre-line">
-            {quote.tweet_content}
-          </p>
-          <p className="text-md mb-6 text-base-content">
-            {quote.name}（{quote.game}）
-          </p>
-          <div className="divider my-4"></div>
+        {/* --- モーダルメインコンテンツ --- */}
+        <div className="modal-content flex-grow overflow-y-auto p-12 bg-gradient-to-b from-[#194582] to-[#257492]">
+          {/* ★★★ Flexboxコンテナを追加 ★★★ */}
+          <div className="flex flex-col md:flex-row gap-6 items-end"> {/* md以上で横並び、それ以下で縦並び。gapで間隔調整 */}
 
-          {imageUrl ? (
-            <div className="my-4 flex justify-center">
-              <Image
-                src={imageUrl}
-                alt={`画像: ${quote.name} - ${quote.tweet_content.substring(0, 20)}...`}
-                width={500} // 例: 画像の最大幅
-                height={300} // 例: 画像の最大高さ
-                objectFit="contain" // アスペクト比を保ちつつコンテナに収める
-                className="max-w-full h-auto max-h-[50vh] rounded-lg shadow-md" // classNameは引き続き有効
-                onError={(e) => {
-                  (e.target as HTMLImageElement).style.display = 'none';
-                  console.error("Failed to load image:", imageUrl);
-                }}
-              />
+            {/* 左カラム: 名言テキスト */}
+            <div className="md:max-w-[60%] flex-1 justify-left"> {/* md以上で幅60%程度、それ以下で全幅 */}
+              <h3 className="font-bold text-5xl text-[#FFFFFF]">
+                {quote.name}
+              </h3>
+              {/* ★★★ 該当するゲームロゴを横に並べて表示 ★★★ */}
+              {relevantGameLogos.length > 0 && (
+                <div className="flex flex-wrap gap--10 mt-2 sm:mt-2 mb-10">
+                  {relevantGameLogos.map(version => (
+                    <div key={version.id} className="relative w-16 h-6 sm:w-18 sm:h-7"> {/* ロゴのサイズ調整 */}
+                      <Image
+                        src={version.logoSrc}
+                        alt={`${version.displayName} ロゴ`}
+                        layout="fill"
+                        objectFit="contain"
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
+              <p className="text-xl lg:text-xl text-[#FFFFFF] leading-relaxed whitespace-pre-line">
+                {quote.tweet_content}
+              </p>
             </div>
-          ) : (
-            quote.image_key && !cloudfrontDomain ? (
-              <p className="text-center text-error italic my-4">画像表示設定エラー</p> // エラー表示改善
-            ) : (
-              <p className="text-center text-gray-500 italic my-4">画像はありません</p> // 文字色調整
-            )
-          )}
+
+            {/* 右カラム: 画像 (画像がある場合のみ表示) */}
+            {imageUrl && (
+              <div className="w-full md:w-auto md:flex-shrink-0 md:max-w-[40%] flex justify-center md:justify-start"> {/* 画像コンテナ */}
+                <img
+                  src={imageUrl}
+                  alt={`画像: ${quote.name}`}
+                  className="max-w-full h-auto max-h-[40vh] md:max-h-[50vh] rounded-lg shadow-md object-contain"
+                  onError={(e) => { /* ... */ }}
+                />
+              </div>
+            )}
+
+            {/* 画像がない場合のメッセージ (画像がない、かつエラーでもない場合) */}
+            {!imageUrl && quote.image_key && !cloudfrontDomain && (
+              <p className="text-center text-error italic my-4">画像表示設定エラー</p>
+            )}
+            {!imageUrl && !quote.image_key && ( // image_key自体がない場合
+              <p className="text-center text-gray-500 italic my-4">画像はありません</p>
+            )}
+          </div>
+        </div>
+
+        {/* --- モーダルフッター --- */}
+        <div className="modal-footer px-4 border-t-4 border-[#FBD74F] flex justify-end gap-2 bg-[#FFFFFF]"> {/* p-4, border-t, flex で配置 */}
+          <button className="btn btn-ghost" onClick={onClose}>
+            Ⓑ もどる
+          </button>
         </div>
       </div>
       <div className="modal-backdrop" onClick={onClose}></div>

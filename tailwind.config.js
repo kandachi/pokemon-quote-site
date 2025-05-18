@@ -8,14 +8,14 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: { // お好みでフォント設定
-        sans: ['"M PLUS Rounded 1c"', 'sans-serif'],
+        sans: ['var(--font-pokemon)', 'sans-serif'],
       },
     },
   },
   plugins: [require("daisyui")],
   daisyui: {
     themes: [
-      "corporate",
+      "nord",
       "night",
       {
         "pokemon-red-green": {
@@ -31,6 +31,7 @@ module.exports = {
           "success": "#34C759",
           "warning": "#FF9500",
           "error": "#FF3B30",
+          
         },
 
         "pokemon-gold-silver": {
@@ -46,6 +47,7 @@ module.exports = {
           "success": "#4CAF50",
           "warning": "#FFC107",
           "error": "#F44336",
+          
         },
 
         "pokemon-rse": {
@@ -61,6 +63,7 @@ module.exports = {
           "success": "#28A745",
           "warning": "#FFEB3B",
           "error": "#DC3545",
+          
         },
 
         "pokemon-dpt": {
@@ -76,6 +79,7 @@ module.exports = {
           "success": "#10B981",
           "warning": "#F59E0B",
           "error": "#EF4444",
+          
         },
 
         "pokemon-hgss": {
@@ -88,6 +92,7 @@ module.exports = {
           "base-200": "#ABB9CA",
           "base-300": "#EBE5CC",
           "base-content": "#3A3A3A",
+          
           // ... info, success etc.
         },
 
@@ -100,6 +105,7 @@ module.exports = {
           "base-100": "#E7E6E5", // 黒背景で白文字もアリ
           "base-200": "#1A1A1A",
           "base-content": "#3A3A3A",  // ほぼ黒の文字
+          
           // ... info, success etc.
         },
 
@@ -111,6 +117,7 @@ module.exports = {
           "base-100": "#FFFFFF",       // ダークな背景
           "base-200": "#212121",
           "base-content": "#3A3A3A",   // 明るいグレーの文字
+          
           // ... info, success etc.
         },
 
@@ -122,6 +129,7 @@ module.exports = {
           "base-100": "#e8eaf6",       // 明るく洗練された背景#f5f5f5
           "base-200": "#f5f5f5",
           "base-content": "#212121",
+          
           // ... info, success etc.
         },
 
@@ -133,6 +141,7 @@ module.exports = {
           "base-100": "#fff3e0",       // 暖色系の明るい背景
           "base-200": "#fffde7",
           "base-content": "#212121",   // 濃い茶色
+          
           // ... info, success etc.
         },
 
@@ -144,6 +153,7 @@ module.exports = {
           "base-100": "#fff3e0", // クールな明るいグレー
           "base-200": "#fef9f4",
           "base-content": "#1a1a1a",
+          
           // ... info, success etc.
         },
 
@@ -155,6 +165,7 @@ module.exports = {
           "base-100": "#e3f2fd",       // 清潔感のあるオフホワイト
           "base-200": "#fdfcf9",
           "base-content": "#1c1c1c",
+          
           // ... info, success etc.
         },
 
@@ -165,7 +176,10 @@ module.exports = {
           "neutral": "#6D4C41", // アースカラー (茶色)
           "base-100": "#ede7f6", // 明るいクリームイエロー (スペインの陽光)
           "base-200": "#fff8f0",
+          "base-300": "#194582",
+          "base-400": "#257492",
           "base-content": "#1a1a1a", // 濃い焦げ茶
+          
           // ... info, success etc.
         },
       },
