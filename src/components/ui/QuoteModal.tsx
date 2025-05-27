@@ -151,7 +151,10 @@ export default function QuoteModal({ quote, onClose }: QuoteModalProps) {
                     layout="fill"
                     objectFit="contain"
                     className="rounded-lg shadow-md"
-                    onError={(e) => { /* ... */ }}
+                    onError={(e) => { // ★ この 'e' が使われていない
+                      (e.target as HTMLImageElement).style.display = 'none'; // next/image ではこの方法は使えないことが多い
+                      console.error("Failed to load image:");
+                    }}
                   />
                 </div>
                 {images.length > 1 && ( // ★ 画像が複数ある場合のみナビゲーション表示
