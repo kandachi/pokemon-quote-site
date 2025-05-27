@@ -64,9 +64,15 @@ export default function HomePage() {
           setError(apiErrorMessage);
           setQuotes([]);
         }
-      } catch (e: any) { // JSON.parseのエラーなどもキャッチ
+      } catch (e: unknown) { // ★★★ unknown 型に変更 ★★★
         console.error("Failed to parse response body:", e);
-        setError(`レスポンスボディの解析に失敗しました: ${e.message}`);
+        let errorMessage = "レスポンスボディの解析中に不明なエラーが発生しました。";
+        if (e instanceof Error) { // ★★★ 型ガード ★★★
+          errorMessage = `レスポンスボディの解析に失敗しました: ${e.message}`;
+        } else if (typeof e === 'string') {
+          errorMessage = e;
+        }
+        setError(errorMessage);
         setQuotes([]);
       }
     })
