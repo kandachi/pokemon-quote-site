@@ -31,28 +31,29 @@ export default function HomePage() {
     fetch(API_ENDPOINT)
       .then(res => {
         if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
+          // APIがエラーを返した場合 (例: 4xx, 5xx) でも、レスポンスボディがあるかもしれないのでパースを試みる
+          return res.json().then(errData => {
+            // エラーレスポンスの形式に合わせてエラーメッセージを組み立てる
+            const message = errData?.error || errData?.message || `HTTP error! status: ${res.status}`;
+            throw new Error(message);
+          }).catch(() => { // JSONパースに失敗した場合はステータスコードのみでエラー
+            throw new Error(`HTTP error! status: ${res.status}`);
+          });
         }
-        return res.json();
+        return res.json(); // ★ レスポンス全体をJSONとしてパース
       })
-      .then(responseData => {
-        if (responseData && typeof responseData.body === 'string') {
-          const quotesArray = JSON.parse(responseData.body);
-          if (Array.isArray(quotesArray)) {
-            setQuotes(quotesArray);
-          } else {
-            console.error("Parsed body is not an array:", quotesArray);
-            setError("名言データの形式が正しくありません。");
-            setQuotes([]);
-          }
+      .then(data => { // data は直接 JSON 配列 [{...}, {...}] であると期待
+        console.log('API Response Data (expected array):', data);
+        if (Array.isArray(data)) {
+          setQuotes(data as Quote[]); // 型アサーション (より安全には個々の要素を検証)
         } else {
-          console.error("Response body is missing or not a string:", responseData);
-          setError("APIからの応答が正しくありません。");
+          console.error("API did not return an array as expected:", data);
+          setError("APIからの応答形式が正しくありません (配列ではありません)。");
           setQuotes([]);
         }
       })
       .catch(err => {
-        console.error("Failed to fetch quotes:", err);
+        console.error("Failed to fetch or parse quotes:", err);
         setError(`名言の読み込みに失敗しました: ${err.message}`);
         setQuotes([]);
       })
@@ -192,7 +193,6 @@ export default function HomePage() {
         <QuoteModal
           quote={selectedQuote}
           onClose={closeModal}
-          cloudfrontDomain={CLOUDFRONT_DOMAIN_NAME}
         />
       )}
     </div>

@@ -9,13 +9,28 @@ import { ALL_GAME_SERIES_DATA, GAME_ID_TO_SERIES_ID_MAP, type GameVersionInfo } 
 type QuoteModalProps = {
   quote: Quote;
   onClose: () => void;
-  cloudfrontDomain: string | undefined;
 };
 
 // モーダルコンポーネント
-export default function QuoteModal({ quote, onClose, cloudfrontDomain }: QuoteModalProps) {
+export default function QuoteModal({ quote, onClose }: QuoteModalProps) {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const modalRootRef = useRef<Element | null>(null);
   const [isBrowser, setIsBrowser] = useState(false);
+
+  const images = quote.imageUrls || [];
+
+  const handlePrevImage = () => {
+    setCurrentImageIndex((prevIndex) =>
+      prevIndex === 0 ? images.length - 1 : prevIndex - 1
+    );
+  };
+
+  const handleNextImage = () => {
+    setCurrentImageIndex((prevIndex) =>
+      prevIndex === images.length - 1 ? 0 : prevIndex + 1
+    );
+  };
+
 
   useEffect(() => {
     setIsBrowser(true);
@@ -25,11 +40,6 @@ export default function QuoteModal({ quote, onClose, cloudfrontDomain }: QuoteMo
   if (!isBrowser || !modalRootRef.current || !quote) { // quote が null の場合も考慮
     return null;
   }
-
-  // 画像URLを組み立てる
-  const imageUrl = quote.image_key && cloudfrontDomain
-    ? `${cloudfrontDomain}/${quote.image_key}`
-    : null;
 
   // ★★★ 表示するゲームロゴの情報を取得 ★★★
   const getRelevantGameVersions = (gameString: string): GameVersionInfo[] => {
@@ -132,26 +142,30 @@ export default function QuoteModal({ quote, onClose, cloudfrontDomain }: QuoteMo
             </div>
 
             {/* 右カラム: 画像 (画像がある場合のみ表示) */}
-            {imageUrl && (
-              <div className="w-full md:w-auto md:flex-shrink-0 md:max-w-[40%] flex justify-center md:justify-start"> {/* 画像コンテナ */}
-                <img
-                  src={imageUrl}
-                  alt={`画像: ${quote.name}`}
-                  className="max-w-full h-auto max-h-[40vh] md:max-h-[50vh] rounded-lg shadow-md object-contain"
-                  onError={(e) => { // ★ この 'e' が使われていない
-                    (e.target as HTMLImageElement).style.display = 'none'; // next/image ではこの方法は使えないことが多い
-                    console.error("Failed to load image:");
-                  }}
-                />
+            {images.length > 0 && (
+              <div className="w-full md:w-auto md:flex-shrink-0 md:max-w-[40%] flex flex-col items-center mt-4 md:mt-0">
+                <div className="relative w-full aspect-[16/9] sm:aspect-[4/3] md:min-h-[300px] mb-2"> {/* アスペクト比と最小高さ */}
+                  <Image
+                    src={images[currentImageIndex]} // ★ 表示する画像URL
+                    alt={`画像 ${currentImageIndex + 1}/${images.length}: ${quote.name}`}
+                    layout="fill"
+                    objectFit="contain"
+                    className="rounded-lg shadow-md"
+                    onError={(e) => { /* ... */ }}
+                  />
+                </div>
+                {images.length > 1 && ( // ★ 画像が複数ある場合のみナビゲーション表示
+                  <div className="flex items-center justify-center gap-4 mt-2">
+                    <button onClick={handlePrevImage} className="btn btn-sm btn-circle">❮</button>
+                    <span>{currentImageIndex + 1} / {images.length}</span>
+                    <button onClick={handleNextImage} className="btn btn-sm btn-circle">❯</button>
+                  </div>
+                )}
               </div>
             )}
-
-            {/* 画像がない場合のメッセージ (画像がない、かつエラーでもない場合) */}
-            {!imageUrl && quote.image_key && !cloudfrontDomain && (
-              <p className="text-center text-error italic my-4">画像表示設定エラー</p>
-            )}
-            {!imageUrl && !quote.image_key && ( // image_key自体がない場合
-              <p className="text-center text-gray-500 italic my-4">画像はありません</p>
+            {/* 画像がない場合のメッセージ */}
+            {images.length === 0 && quote.game && ( // game属性はあるが画像URLリストが空の場合
+                 <p className="text-center text-gray-500 italic my-4 md:w-[40%]">この名言の画像はありません</p>
             )}
           </div>
         </div>
