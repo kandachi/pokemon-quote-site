@@ -42,48 +42,24 @@ export default function HomePage() {
         }
         return res.json(); // ★ レスポンス全体をJSONとしてパース
       })
-      .then(responseData => { // ★ responseData は { statusCode: ..., headers: ..., body: "..." } の形を期待
-      console.log('API Gateway Proxy Response (responseData):', responseData);
-      try {
-        // responseData.body が文字列で、その中身がJSON配列のはず
-        if (responseData && typeof responseData.body === 'string') {
-          const quotesArray = JSON.parse(responseData.body); // body文字列をJSON配列にパース
-          console.log('Parsed quotesArray from responseData.body:', quotesArray);
-          if (Array.isArray(quotesArray)) {
-            setQuotes(quotesArray as Quote[]);
-          } else {
-            console.error("Parsed body is not an array:", quotesArray);
-            setError("名言データの形式が正しくありません (body内のデータが配列ではありません)。");
-            setQuotes([]);
-          }
+      .then(data => { // data は直接 JSON 配列 [{...}, {...}] であると期待
+        console.log('API Response Data (expected array):', data);
+        if (Array.isArray(data)) {
+          setQuotes(data as Quote[]); // 型アサーション (より安全には個々の要素を検証)
         } else {
-          console.error("Response body is missing or not a string:", responseData);
-          // Lambdaがエラーを返した場合、responseData.body が存在しないか、文字列でないことがある
-          // その場合、responseData.message や responseData.error にエラー内容が含まれているか確認
-          const apiErrorMessage = responseData?.message || responseData?.error || "APIからの応答形式が正しくありません (bodyが文字列ではありません)。";
-          setError(apiErrorMessage);
+          console.error("API did not return an array as expected:", data);
+          setError("APIからの応答形式が正しくありません (配列ではありません)。");
           setQuotes([]);
         }
-      } catch (e: unknown) { // ★★★ unknown 型に変更 ★★★
-        console.error("Failed to parse response body:", e);
-        let errorMessage = "レスポンスボディの解析中に不明なエラーが発生しました。";
-        if (e instanceof Error) { // ★★★ 型ガード ★★★
-          errorMessage = `レスポンスボディの解析に失敗しました: ${e.message}`;
-        } else if (typeof e === 'string') {
-          errorMessage = e;
-        }
-        setError(errorMessage);
+      })
+      .catch(err => {
+        console.error("Failed to fetch or parse quotes:", err);
+        setError(`名言の読み込みに失敗しました: ${err.message}`);
         setQuotes([]);
-      }
-    })
-    .catch(err => {
-      console.error("Failed to fetch quotes:", err);
-      setError(`名言の読み込みに失敗しました: ${err.message}`);
-      setQuotes([]);
-    })
-    .finally(() => {
-      setIsLoading(false);
-    });
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   }, []);
 
   const filteredQuotes = quotes.filter(q => {
