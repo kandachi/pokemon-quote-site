@@ -103,6 +103,7 @@ module.exports = {
           //"base-100": "#EAEAEA",       // 明るいグレーの背景 (白を際立たせる)
           "base-100": "#E7E6E5", // 黒背景で白文字もアリ
           "base-200": "#1A1A1A",
+          "base-300": "#E7E6E5",
           "base-content": "#3A3A3A",  // ほぼ黒の文字
           
           // ... info, success etc.
@@ -115,6 +116,7 @@ module.exports = {
           "neutral": "#333333",
           "base-100": "#FFFFFF",       // ダークな背景
           "base-200": "#212121",
+          "base-300": "#FFFFFF",
           "base-content": "#3A3A3A",   // 明るいグレーの文字
           
           // ... info, success etc.
