@@ -5,7 +5,7 @@ export default function Footer() {
   const twitterAccountUrl = "https://x.com/pokemonquote168"; // ★ あなたのTwitterアカウントURL
 
   return (
-    <footer className="footer footer-center p-4 bg-base-300 text-base-content">
+    <footer className="footer footer-center p-4 bg-base-100 text-base-content">
       <aside> {/* asideタグに変更してグループ化 */}
         <p>Copyright © {new Date().getFullYear()} - ポケモンの名言集. All right reserved.</p>
       </aside>

@@ -160,7 +160,7 @@ export default function HomePage() {
             {filteredQuotes.map((q) => (
               <div
                 key={q.ID}
-                className="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow duration-300 ease-in-out cursor-pointer"
+                className="card bg-base-300 shadow-xl hover:shadow-2xl transition-shadow duration-300 ease-in-out cursor-pointer"
                 onClick={() => openModal(q)}
               >
                 <div className="card-body">

@@ -19,19 +19,18 @@ module.exports = {
       "night",
       {
         "pokemon-red-green": {
-          "primary": "#c62828",       // 明るめの赤 (Redのイメージ)#c62828#FF3B30
-          "secondary": "#2e7d32",     // 明るめの緑 (Greenのイメージ)#2e7d32#4CD964
+          "primary": "#c62828",       // ボタン
+          "secondary": "#2e7d32",     // ボタン(選択中)
           "accent": "#FFCC00",        // 黄色 (ピカチュウ、電気)
           "neutral": "#FF3B30",       // グレー (UI要素の区切りなど)
-          "base-100": "#C0BC8F",       // 明るいオフホワイト (清潔感)
-          "base-200": "#C0BC8F",
-          "base-300": "#D1D1D6",
+          "base-100": "#C0BC8F",      // header and footer, 検索バー
+          "base-200": "#C0BC8F",      // 背景
+          "base-300": "#D1D1D6",      // modal
           "base-content": "#212121",   // 濃いチャコールグレー (文字)
           "info": "#007AFF",
           "success": "#34C759",
           "warning": "#FF9500",
           "error": "#FF3B30",
-          
         },
 
         "pokemon-gold-silver": {
@@ -169,6 +168,18 @@ module.exports = {
           // ... info, success etc.
         },
 
+        "pokemon-la": {
+          "primary": "#4e8a89",       // ザシアンのシアン
+          "secondary": "#355d5c",     // ザマゼンタのマゼンタ
+          "accent": "#F1C40F",        // ゴールド (王冠など)
+          "neutral": "#4A5568",       // ストーングレー
+          "base-100": "#fffaf5",       // 清潔感のあるオフホワイト
+          "base-200": "#f4f1ec",
+          "base-content": "#2b2b2b",
+          
+          // ... info, success etc.
+        },
+
         "pokemon-sv": {
           "primary": "#E64A19", // スカーレット (鮮やかな朱色)
           "secondary": "#7B1FA2", // バイオレット (深い紫色)
@@ -176,7 +187,7 @@ module.exports = {
           "neutral": "#6D4C41", // アースカラー (茶色)
           "base-100": "#ede7f6", // 明るいクリームイエロー (スペインの陽光)
           "base-200": "#fff8f0",
-          "base-300": "#194582",
+          "base-300": "#fff8f0",
           "base-400": "#257492",
           "base-content": "#1a1a1a", // 濃い焦げ茶
           

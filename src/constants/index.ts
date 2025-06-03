@@ -33,6 +33,7 @@ export const GAME_ID_TO_SERIES_ID_MAP: Record<string, string> = {
   "USUM": "usum",
   "LPLE": "lple", // Let's Go Pikachu, Let's Go Eevee
   "剣盾": "swsh",
+  "LA": "la",
   "SV": "sv",
 };
 
@@ -159,6 +160,15 @@ export const ALL_GAME_SERIES_DATA: GameSeriesInfo[] = [
     ],
     themeName: "pokemon-sword-shield",
     filterButtonLogoSrc: "/images/game-logos/swsh_filter_button.png",
+  },
+  {
+    seriesId: "la",
+    seriesName: "LEGENDS アルセウス",
+    versions: [
+      { id: "la", displayName: "LEGENDS アルセウス", logoSrc: "/images/game-logos/la.png" },
+    ],
+    themeName: "pokemon-la",
+    filterButtonLogoSrc: "/images/game-logos/la_filter_button.png",
   },
   {
     seriesId: "sv",
