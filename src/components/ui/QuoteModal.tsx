@@ -41,7 +41,7 @@ export default function QuoteModal({ quote, onClose }: QuoteModalProps) {
     return null;
   }
 
-  // ★★★ 表示するゲームロゴの情報を取得 ★★★
+  // 表示するゲームロゴの情報を取得
   const getRelevantGameVersions = (gameString: string): GameVersionInfo[] => {
     const gameIdStringsFromQuote = gameString.split('/').map(s => s.trim()); // "Pt/HGSS" -> ["Pt", "HGSS"]
     const relevantVersionsSet = new Set<GameVersionInfo>(); // 重複を避けるためにSetを使用
@@ -146,7 +146,7 @@ export default function QuoteModal({ quote, onClose }: QuoteModalProps) {
               <div className="w-full md:w-auto md:flex-shrink-0 md:max-w-[40%] flex flex-col items-center mt-4 md:mt-0">
                 <div className="relative w-full aspect-[16/9] sm:aspect-[4/3] md:min-h-[300px] mb-2"> {/* アスペクト比と最小高さ */}
                   <Image
-                    src={images[currentImageIndex]} // ★ 表示する画像URL
+                    src={images[currentImageIndex]} // 表示する画像URL
                     alt={`画像 ${currentImageIndex + 1}/${images.length}: ${quote.name}`}
                     layout="fill"
                     objectFit="contain"

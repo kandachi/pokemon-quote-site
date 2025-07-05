@@ -181,3 +181,11 @@ export const ALL_GAME_SERIES_DATA: GameSeriesInfo[] = [
     filterButtonLogoSrc: "/images/game-logos/sv_filter_button.png",
   },
 ];
+
+export const MAIN_CHARACTERS: string[] = [
+  "グリーン",
+  "シトロン",
+  "シルバー",
+  "N",
+  "ゲーチス",
+];
