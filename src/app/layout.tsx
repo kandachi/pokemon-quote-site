@@ -4,6 +4,8 @@ import "../styles/globals.css";
 
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import { getCharacters } from "@/libs/GetCharacter";
+import { CharacterProvider } from "@/contexts/CharacterContext";
 
 // ★ ローカルフォントのインスタンスを作成
 const pokemonFont = localFont({
@@ -40,26 +42,30 @@ export const metadata: Metadata = {
   description: "ポケモンシリーズの名言を集めたサイトです。",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const allCharacters = await getCharacters();
+
   return (
     // ★★★ data-theme 属性を削除するか、初期値を設定 ★★★
     // 初期値を設定する場合、page.tsxのcurrentThemeの初期値と合わせる
     <html lang="ja" data-theme="light" className={pokemonFont.variable}>
       <body className={pokemonFont.className}>
-        <div className="min-h-screen flex flex-col bg-base-200">
-          <Header />
-          
-          {/* {children} の部分に、各ページのコンテンツ(page.tsx)が挿入される */}
-          <main className="flex-grow">
-            {children}
-          </main>
-          
-          <Footer />
-        </div>
+        <CharacterProvider characters={allCharacters}>
+          <div className="min-h-screen flex flex-col bg-base-200">
+            <Header />
+            
+            {/* {children} の部分に、各ページのコンテンツ(page.tsx)が挿入される */}
+            <main className="flex-grow">
+              {children}
+            </main>
+            
+            <Footer />
+          </div>
+        </CharacterProvider>
 
         <div id="modal-root"></div>
       </body>

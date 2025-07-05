@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import SearchBar from '@/components/ui/SearchBar';
 import SuggestionsList from '@/components/ui/SuggestionsList';
-import { MAIN_CHARACTERS } from '@/constants';
+import { useCharacterSuggestions } from '@/contexts/CharacterContext';
 
 type Props = {
   searchQuery: string;
@@ -21,6 +21,8 @@ export default function QuoteSearch({ searchQuery, onSearchQueryChange }: Props)
   const handleSuggestionClick = (characterName: string) => {
     router.push(`/characters/${characterName}`);
   };
+
+  const allCharacters = useCharacterSuggestions();
 
   useEffect(() => {
     setInputValue(searchQuery);
@@ -55,9 +57,10 @@ export default function QuoteSearch({ searchQuery, onSearchQueryChange }: Props)
   }, []);
 
   const characterNameSuggestions = inputValue.length > 0
-    ? MAIN_CHARACTERS.filter(name =>
-        name.toLowerCase().startsWith(inputValue.toLowerCase())
-      ).slice(0, 5)
+    ? allCharacters
+      .map(char => char.name_ja)
+      .filter(name =>name.toLowerCase().startsWith(inputValue.toLowerCase()))
+      .slice(0, 5)
     : [];
 
   return (
