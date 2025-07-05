@@ -1,5 +1,4 @@
-import CharacterPageClient from '@/app/characters/[characterName]/CharacterPageClient'; // ★ これから作るクライアントコンポーネント
-import { MAIN_CHARACTERS } from '@/constants';
+import CharacterPageClient from '@/app/characters/[characterName]/CharacterPageClient';
 import { getQuotes } from '@/libs/GetQuote';
 import { getCharacters } from '@/libs/GetCharacter';
 
