@@ -7,12 +7,21 @@ export const dynamic = 'force-dynamic';
 
 // 特定キャラクターの名言データを取得する非同期関数（仮）
 export async function generateStaticParams() {
-  // MAIN_CHARACTERS の配列をNext.jsが期待する形式に変換
-  const paths = MAIN_CHARACTERS.map((name) => ({
-    characterName: name,
-  }));
+  try {
+    const allCharacters = await getCharacters();
 
-  return paths;
+    const names = allCharacters.map(item => item.name_ja);
+
+    const paths = names.map((name) => ({
+      characterName: name, 
+    }));
+
+    return paths;
+
+  } catch (error) {
+    console.error("Failed to fetch character names from DynamoDB:", error);
+    return [];
+  }
 }
 
 export default async function CharacterPage({ params }: { params: Promise<{ characterName: string }> }) {
