@@ -1,4 +1,3 @@
-import { notFound } from 'next/navigation';
 import CharacterPageClient from '@/app/characters/[characterName]/CharacterPageClient'; // ★ これから作るクライアントコンポーネント
 import { MAIN_CHARACTERS } from '@/constants';
 import { getQuotes } from '@/libs/GetQuote';
