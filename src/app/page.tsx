@@ -1,6 +1,5 @@
 import HomePageClient from '@/components/HomePageClient'; // 作成したクライアントコンポーネントをインポート
 import { getQuotes } from '@/libs/GetQuote';
-import { getCharacters } from '@/libs/GetCharacter';
 
 // これがページの本体。asyncにするのを忘れずに！
 export default async function HomePage() {
